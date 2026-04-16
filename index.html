@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SKYVAULT — Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts: Bebas Neue (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body class="theme-default" id="app-body">
+
+  <!-- ░░ BACKGROUND LAYER ░░ -->
+  <div class="bg-layer" id="bg-layer">
+    <div class="bg-gradient" id="bg-gradient"></div>
+    <div class="bg-noise"></div>
+    <div class="bg-orb orb-1" id="orb-1"></div>
+    <div class="bg-orb orb-2" id="orb-2"></div>
+    <div class="bg-particles" id="particles"></div>
+  </div>
+
+  <!-- ░░ MAIN LAYOUT ░░ -->
+  <div class="shell">
+
+    <!-- ── Header ── -->
+    <header class="site-header">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">SKYVAULT</span>
+      </div>
+      <div class="header-meta" id="header-time"></div>
+    </header>
+
+    <!-- ── Search Bar ── -->
+    <section class="search-section">
+      <div class="search-wrap">
+        <div class="search-box" id="search-box">
+          <span class="search-icon">⌕</span>
+          <input
+            type="text"
+            id="city-input"
+            class="search-input"
+            placeholder="Search any city…"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="City search"
+          />
+          <button class="search-btn" id="search-btn" aria-label="Search">
+            <span>GO</span>
+          </button>
+        </div>
+        <p class="search-hint" id="search-hint">Press <kbd>Enter</kbd> to search · Using your location</p>
+      </div>
+    </section>
+
+    <!-- ── Loading Spinner ── -->
+    <div class="loader-wrap" id="loader" aria-live="polite" aria-label="Loading weather data">
+      <div class="loader-ring"></div>
+      <p class="loader-text">Fetching skies…</p>
+    </div>
+
+    <!-- ── Error State ── -->
+    <div class="error-card" id="error-card" role="alert" aria-live="assertive">
+      <div class="error-icon">⚠</div>
+      <p class="error-msg" id="error-msg">Something went wrong.</p>
+      <button class="error-retry" id="error-retry">Try Again</button>
+    </div>
+
+    <!-- ── Weather Dashboard ── -->
+    <main class="dashboard" id="dashboard">
+
+      <!-- Primary card: location + temperature -->
+      <div class="card card-hero" id="card-hero">
+        <div class="card-inner">
+          <div class="hero-top">
+            <div class="location-block">
+              <h1 class="city-name" id="city-name">—</h1>
+              <p class="country-name" id="country-name">—</p>
+              <p class="date-label" id="date-label">—</p>
+            </div>
+            <div class="weather-icon-wrap">
+              <div class="weather-icon" id="weather-icon" aria-label="Weather icon">
+                <!-- SVG injected by JS -->
+              </div>
+              <p class="condition-label" id="condition-label">—</p>
+            </div>
+          </div>
+
+          <div class="hero-temp-row">
+            <span class="temp-value" id="temp-value">—</span>
+            <div class="temp-meta">
+              <div class="temp-unit-toggle">
+                <button class="unit-btn active" id="btn-c" aria-label="Celsius">°C</button>
+                <span>|</span>
+                <button class="unit-btn" id="btn-f" aria-label="Fahrenheit">°F</button>
+              </div>
+              <p class="feels-like" id="feels-like">Feels like —</p>
+              <p class="temp-range" id="temp-range">H: — · L: —</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-glow"></div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="stats-row">
+
+        <div class="card card-stat" id="card-humidity">
+          <div class="stat-icon">💧</div>
+          <div class="stat-info">
+            <p class="stat-label">Humidity</p>
+            <p class="stat-value" id="humidity-val">—</p>
+          </div>
+          <div class="stat-bar-track">
+            <div class="stat-bar-fill" id="humidity-bar"></div>
+          </div>
+        </div>
+
+        <div class="card card-stat" id="card-wind">
+          <div class="stat-icon">🌬</div>
+          <div class="stat-info">
+            <p class="stat-label">Wind</p>
+            <p class="stat-value" id="wind-val">—</p>
+          </div>
+          <p class="stat-sub" id="wind-dir">Direction: —</p>
+        </div>
+
+        <div class="card card-stat" id="card-pressure">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <p class="stat-label">Pressure</p>
+            <p class="stat-value" id="pressure-val">—</p>
+          </div>
+          <p class="stat-sub" id="pressure-trend">—</p>
+        </div>
+
+        <div class="card card-stat" id="card-visibility">
+          <div class="stat-icon">👁</div>
+          <div class="stat-info">
+            <p class="stat-label">Visibility</p>
+            <p class="stat-value" id="visibility-val">—</p>
+          </div>
+          <p class="stat-sub">Kilometres</p>
+        </div>
+
+      </div>
+
+      <!-- Sun + UV row -->
+      <div class="sun-row">
+
+        <div class="card card-sun">
+          <div class="sun-block">
+            <span class="sun-emoji">🌅</span>
+            <div>
+              <p class="stat-label">Sunrise</p>
+              <p class="sun-time" id="sunrise-val">—</p>
+            </div>
+          </div>
+          <div class="sun-divider"></div>
+          <div class="sun-block">
+            <span class="sun-emoji">🌇</span>
+            <div>
+              <p class="stat-label">Sunset</p>
+              <p class="sun-time" id="sunset-val">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-uv">
+          <p class="stat-label">UV Index</p>
+          <p class="uv-value" id="uv-val">—</p>
+          <p class="uv-label" id="uv-label">—</p>
+          <div class="uv-track">
+            <div class="uv-fill" id="uv-fill"></div>
+          </div>
+        </div>
+
+        <div class="card card-cloudiness">
+          <p class="stat-label">Cloud Cover</p>
+          <p class="cloud-value" id="cloud-val">—</p>
+          <div class="cloud-visual" id="cloud-visual"></div>
+        </div>
+
+      </div>
+
+      <!-- Last updated footer -->
+      <p class="updated-at" id="updated-at">—</p>
+
+    </main>
+
+  </div><!-- /shell -->
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /**
- * SKYVAULT — Weather Dashboard
+ * THIRTYSIX — Weather Dashboard
  * script.js
  *
  * HOW TO GET YOUR API KEY:
